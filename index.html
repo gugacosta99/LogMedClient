@@ -116,22 +116,80 @@
                 <!-- Step 1 -->
                 <div class="step" id="step1">
                     <div class="step1-container">
-                        <div class="form-user">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="username" aria-describedby="emailHelp">
+                        <div class="form-user container-fluid p-5">
+                            <h3>Informações do Paciente</h3>
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <label for="username" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="username" aria-describedby="emailHelp">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email">
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="phone" class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="phone">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Telefone</label>
-                                <input type="text" class="form-control" id="phone">
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="datanasc" class="form-label">Data de Nascimento</label>
+                                    <input type="date" class="form-control" id="datanasc">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="sexo" class="form-label">Sexo</label>
+                                    <!-- <input type="text" class="form-control" id="sexo"> -->
+                                    <select id="sexo" class="form-select mb-3" aria-label="Large select example">
+                                        <option value="-Selecione-" selected>-Selecione-</option>
+                                        <option value="MASC">MASC</option>
+                                        <option value="FEM">FEM</option>
+                                        <option value="OUTRO">OUTRO</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="cep" class="form-label">CEP</label>
-                                <input type="text" class="form-control" id="cep">
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="cpf" class="form-label">CPF</label>
+                                    <input type="text" class="form-control" id="cpf">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="sus" class="form-label">Nº do Cartão do SUS</label>
+                                    <input type="text" class="form-control" id="sus">
+                                </div>
+                            </div>
+                            <h3>Endereço</h3>
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="cep" class="form-label">CEP</label>
+                                    <input type="text" class="form-control" id="cep">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="num" class="form-label">Número/Complemento</label>
+                                    <input type="text" class="form-control" id="num">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="rua" class="form-label">Rua</label>
+                                    <input type="text" class="form-control" id="rua">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="bairro" class="form-label">Bairro</label>
+                                    <input type="text" class="form-control" id="bairro">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="cidade" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="cidade">
+                                </div>
+                                <div class="mb-3 col-lg-6 col-12">
+                                    <label for="estado" class="form-label">Estado</label>
+                                    <input type="text" class="form-control" id="estado">
+                                </div>
                             </div>
                         </div>
                     </div>

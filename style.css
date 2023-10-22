@@ -60,11 +60,6 @@ header {
     justify-content: space-between;
 }
 
-.form-user {
-    padding: 100px;
-    width: 700px;
-}
-
 .pill-container {
     display: flex;
     justify-content: center;

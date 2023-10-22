@@ -135,6 +135,54 @@ $(document).ready(function () {
         $(this).val(phoneNumber);
     });
 
+    $('#cpf').on('input', function () {
+        let cpf = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
+
+        console.log(cpf);
+
+        if (cpf.length > 3) {
+            cpf = cpf.substring(0, 3) + '.' + cpf.substring(3);
+        }
+
+        if (cpf.length > 7) {
+            cpf = cpf.substring(0, 7) + '.' + cpf.substring(7);
+        }
+
+        if (cpf.length > 11) {
+            cpf = cpf.substring(0, 11) + '-' + cpf.substring(11);
+        }
+
+        if (cpf.length > 14) {
+            cpf = cpf.substring(0, 14);
+        }
+
+        $(this).val(cpf);
+    });
+
+    $('#sus').on('input', function () {
+        let sus = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
+
+        console.log(sus);
+
+        if (sus.length > 3) {
+            sus = sus.substring(0, 3) + ' ' + sus.substring(3);
+        }
+
+        if (sus.length > 8) {
+            sus = sus.substring(0, 8) + ' ' + sus.substring(8);
+        }
+
+        if (sus.length > 13) {
+            sus = sus.substring(0, 13) + ' ' + sus.substring(13);
+        }
+
+        if (sus.length > 18) {
+            sus = sus.substring(0, 18);
+        }
+
+        $(this).val(sus);
+    });
+
     $('#cep').on('input', function () {
         let CEP = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
 
@@ -195,20 +243,49 @@ $(document).ready(function () {
         const validName = $('#username').val() != ''
         const validEmail = validateEmail()
         const validPhone = validatePhone()
+        const validDataNasc = $('#datanasc').val() != ''
+        const validSexo = $('#sexo').val() != '-Selecione-'
+        const validCPF = validateCPF()
+        const validSUS = validateSUS()
         const validCEP = validateCEP()
+        const validNum = $('#num').val() != ''
+        const validRua = $('#rua').val() != ''
+        const validBairro = $('#bairro').val() != ''
+        const validCidade = $('#cidade').val() != ''
+        const validNEstado = $('#estado').val() != ''
 
-        if (!(validName && validEmail && validPhone)) {
+        if (!(
+                validName 
+                && validEmail 
+                && validPhone
+                && validDataNasc
+                && validSexo
+                && validCPF
+                && validSUS
+                && validCEP
+                && validNum
+                && validRua
+                && validBairro
+                && validCidade
+                && validNEstado
+            )) {
             alert('Por favor, insira os dados corretos.');
         }
 
         return (
-            validName
-            &&
-            validEmail
-            &&
-            validPhone
-            &&
-            validCEP
+            validName 
+            && validEmail 
+            && validPhone
+            && validDataNasc
+            && validSexo
+            && validCPF
+            && validSUS
+            && validCEP
+            && validNum
+            && validRua
+            && validBairro
+            && validCidade
+            && validNEstado
         )
     }
 
@@ -229,6 +306,18 @@ $(document).ready(function () {
         let CEP = $('#cep').val()
 
         return CEP.length >= 9
+    }
+
+    function validateCPF() {
+        let CPF = $('#cpf').val()
+
+        return CPF.length >= 14
+    }
+
+    function validateSUS() {
+        let SUS = $('#sus').val()
+
+        return SUS.length >= 18
     }
 
     function validateProc() {
