@@ -1,0 +1,369 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0056b3;
+    background-position: 100%;
+    background-repeat: no-repeat, repeat, no-repeat;
+    background-size: 200%;
+
+}
+
+.accordion-button {
+    background-color: #0056b3;
+    color: #fcfcfc;
+}
+
+.accordion-button:hover {
+    background-color: #ff9100;
+
+}
+
+.container-fluid {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-select {
+    background-color: #0056b3;
+    color: white;
+}
+
+.marcar {
+    border-radius: 10px;
+    padding: 5px;
+    width: 500px;
+    bottom: center;
+}
+
+.col {
+    padding: 1%;
+    text-justify: auto;
+}
+
+.text {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 1px;
+}
+
+.pp {
+    text-align: center;
+    color: rgb(255, 255, 255);
+}
+
+.cards11 {
+    background-color: #0056b3;
+    text-justify: auto;
+    padding: 10px;
+    background-image: url('./med.jpeg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+
+
+}
+
+.row {
+    margin-right: 0%;
+    margin-left: 0%;
+}
+
+.sobrenos {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 1px;
+}
+
+.col-8 {
+    color: rgb(0, 0, 0);
+
+}
+
+.card-text {
+    text-align: justify;
+}
+
+.medica {
+    direction: ltr;
+    flex-direction: row-reverse;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    height: 600px;
+    padding: 100px 50px;
+    margin: auto;
+    background-image: url('./icones.png');
+
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    width: 1400px;
+    height: 500px;
+    padding: 100px 50px;
+    margin: auto;
+    font-size: 12px;
+    /* Alinha os elementos verticalmente */
+}
+
+.image {
+    flex: 1;
+    /* A imagem ocupa 1 parte do espaço disponível */
+    margin-right: 20px;
+    /* Espaço entre a imagem e os cards */
+}
+
+.cards {
+    flex: 2;
+    /* Os cards ocupam 1 parte do espaço disponível */
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    /* Alinha os cards verticalmente */
+}
+
+.card {
+    border: 1px solid #ff9100;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+}
+
+.card:hover {
+    transform: translateY(-20px);
+    box-shadow: 15px 15px 15px;
+}
+
+.img000 {
+    background-color: #0056b3;
+    background-position: bottom left, 0%, bottom right;
+    background-repeat: no-repeat, repeat, no-repeat;
+    background-size: 30%, cover, 60vw;
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+/* REFERENTE AO BEM VINDO E A MULHER PNG*/
+.cores {
+    background-color: #0056b3;
+    background-image: url('./bg-icon.png');
+}
+
+.corpoconsulta {
+    background-color: #ffffff;
+    background-image: url('./bg-icon.png');
+    color: black;
+
+}
+
+.listas {
+    color: black;
+    background-color: white;
+
+}
+
+.h2detalhes {
+    text-align: center;
+    font-size: 40px;
+}
+
+
+
+
+/*REFRENTE AO CONTATO FINAL (FOOTER)*/
+@import url(./https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Inter:wght@100;200;300;400;500;600&display=swap);
+
+:root {
+    --color-neutral-0: #0e0c0c;
+    --color-neutral-0: #171717;
+    --color-neutral-0: #a8a29e;
+    --color-neutral-0: #f5f5f5;
+}
+
+.fim {
+    font-family: 'inter' sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+
+footer {
+    width: 100%;
+    color: var(--color-neutral-40);
+}
+
+.footer-link {
+    text-decoration: none;
+}
+
+#footer_content {
+    background-color: var(--color-neutral-10);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 3rem 3.5rem;
+}
+
+#footer_contacts h1 {
+    margin-bottom: 0.75rem;
+}
+
+#footer_social_media {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+#footer_social_media .footer-link {
+    height: 2.5rem;
+    width: 2.5rem;
+    color: var(--color-neutral-40);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    transition: all 0.4s;
+}
+
+#footer_social_media .footer-link i {
+    font-size: 1.25rem;
+}
+
+#footer_social_media .footer-link:hover {
+    opacity: 0.8%;
+}
+
+#instagram {
+    background: linear-gradient(#7f37c9, #ff2992, #ff9807);
+}
+
+#facebook {
+    background-color: #4267b3;
+}
+
+#whatsapp {
+    background-color: #25d366;
+}
+
+.footer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.footer-list .footerlink {
+    color: var(--color-neutral-30);
+}
+
+.footer-list .footerlink:hover {
+    color: #7f37c9;
+}
+
+#footer_subscribe {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#footer_subscribe p {
+    color: var(--color-neutral-30);
+}
+
+#input_group {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-neutral-0);
+    border-radius: 4px;
+}
+
+#input_group input {
+    all: unset;
+    padding: 0.75rem;
+    width: 100%;
+}
+
+#input_group button {
+    background-color: #7f37c9;
+    border: none;
+    color: var(--color-neutral-40);
+    padding: 0px, 1.25rem;
+    font-size: 1.125rem;
+    height: 100%;
+    border-radius: 0px, 4px, 0px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+#input_group button:hover {
+    opacity: 0.8;
+}
+
+#footer_copyright {
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-neutral-0);
+    font-size: 0.9rem;
+    padding: 1.5rem;
+    font-weight: 100;
+    background-color: white;
+}
+
+@media screen and (max-width) {
+    #footer_content {
+        grid-template-columns: repeat (2, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media screen and (max-width) {
+    #footer_content {
+        grid-template-columns: repeat (1, 1fr);
+        padding: 3rem 2rem;
+    }
+}
+
+
+#cor-footer {
+    background-color: rgb(190, 190, 190);
+    background-image: url(./bg-icon.png);
+}
+
+.scroll {
+    background-image: url('./med1.jpeg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    /* Ajuste conforme necessário */
+}
+
+/*DEGRADÊ DA IMAGEM INICIAL*/
+.imagemm {
+    position: relative;
+    display: inline-block;
+}
+
+.image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+}
