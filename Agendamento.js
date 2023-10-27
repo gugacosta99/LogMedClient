@@ -4,13 +4,13 @@ const _url = 'https://www.api.logmed.gustech-rec.com'
 
 $(document).ready(function () {
     
-    exams.forEach((ex, i) => {
+    /* exams.forEach((ex, i) => {
         $('#exam-select').append(`<option value="${i + 1}">${ex}</option>`)
     })
     especialidades.forEach((es, i) => {
         $('#esp-select').append(`<option value="${i + 1}">${es}</option>`)
         console.log(`<option value="${i + 1}">${es}</option>`);
-    })
+    }) */
 
     fetchProcedimentos().then(procs => {
         if(procs) {
@@ -24,6 +24,8 @@ $(document).ready(function () {
             procs.especialidades.forEach((es, i) => {
                 $('#esp-select').append(`<option value="${es.idProcedimento}">${es.Nome}</option>`)
             })
+        } else {
+            alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
         }
     })
     $('#exam-select').hide()
@@ -81,7 +83,7 @@ $(document).ready(function () {
             validation = validateProc()
             console.log(validation);
             if (validation) {
-                $('#tbody-agenda').empty()
+                /* $('#tbody-agenda').empty()
                 filteredAgenda = filterAgendamento()
                 filteredAgenda.forEach((ag, i) => {
                     const hosp = `<th scope="row">${ag.hospital}</th>`
@@ -93,7 +95,7 @@ $(document).ready(function () {
 
                     const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
                     $('#tbody-agenda').append(row)
-                })
+                }) */
                 fetchAgenda(procID).then(data => {
                     if(data) {
                         $('#tbody-agenda').empty()
@@ -108,6 +110,8 @@ $(document).ready(function () {
                             const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
                             $('#tbody-agenda').append(row)
                         })
+                    } else {
+                        alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
                     }
                 })
 
