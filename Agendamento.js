@@ -1,5 +1,5 @@
 var { exams, especialidades, agendas } = getData()
-const _url = 'http://www.api.logmed.gustech-rec.com'
+const _url = 'https://www.api.logmed.gustech-rec.com'
 
 
 $(document).ready(function () {
