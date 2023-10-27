@@ -1,11 +1,30 @@
-const { exams, especialidades, agendas } = getData()
+var { exams, especialidades, agendas } = getData()
+const _url = 'http://www.api.logmed.gustech-rec.com'
+
 
 $(document).ready(function () {
+    
     exams.forEach((ex, i) => {
         $('#exam-select').append(`<option value="${i + 1}">${ex}</option>`)
     })
     especialidades.forEach((es, i) => {
         $('#esp-select').append(`<option value="${i + 1}">${es}</option>`)
+        console.log(`<option value="${i + 1}">${es}</option>`);
+    })
+
+    fetchProcedimentos().then(procs => {
+        if(procs) {
+            $('#exam-select').empty()
+            $('#exam-select').append(`<option selected>Selecione o Exame</option>`)
+            procs.exames.forEach((ex, i) => {
+                $('#exam-select').append(`<option value="${ex.idProcedimento}">${ex.Nome}</option>`)
+            })
+            $('#esp-select').empty()
+            $('#esp-select').append(`<option selected>Selecione a Especialidade</option>`)
+            procs.especialidades.forEach((es, i) => {
+                $('#esp-select').append(`<option value="${es.idProcedimento}">${es.Nome}</option>`)
+            })
+        }
     })
     $('#exam-select').hide()
     $('#esp-select').hide()
@@ -13,6 +32,7 @@ $(document).ready(function () {
 
     var select = ''
     var procSelect = ''
+    var procID = -1
     var filteredAgenda = []
     var agSelect = {}
 
@@ -66,14 +86,31 @@ $(document).ready(function () {
                 filteredAgenda.forEach((ag, i) => {
                     const hosp = `<th scope="row">${ag.hospital}</th>`
                     const proc = ag.tipo === 'consulta' ? `<td>${ag.medico} (${ag.procedimento})</td>` : `<td>${ag.procedimento}</td>`
-                    const dist = `<td>${ag.distancia}</td>`
-                    const data = `<td>${ag.datas[0].dia} ${ag.datas[0].horarios[0]}</td>`
+                    const bair = `<td>${ag.bairro}</td>`
+                    const cida = `<td>${ag.cidade}</td>`
 
                     const modalSet = 'data-bs-toggle="modal" data-bs-target="#exampleModal"'
 
-                    const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${dist} ${data}</tr>`
+                    const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
                     $('#tbody-agenda').append(row)
                 })
+                fetchAgenda(procID).then(data => {
+                    if(data) {
+                        $('#tbody-agenda').empty()
+                        data.forEach((ag, i) => {
+                            const hosp = `<th scope="row">${ag.nomeHospital}</th>`
+                            const proc = ag.idMedico > 0 ? `<td>${ag.nomeMedico} (${ag.Procedimento})</td>` : `<td>${ag.Procedimento}</td>`
+                            const bair = `<td>${ag.Bairro}</td>`
+                            const cida = `<td>${ag.Cidade}</td>`
+                            
+                            const modalSet = 'data-bs-toggle="modal" data-bs-target="#exampleModal"'
+                            
+                            const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
+                            $('#tbody-agenda').append(row)
+                        })
+                    }
+                })
+
                 $('.ag-table-row').click(function () {
                     agSelect = filteredAgenda[$(this).data('index')]
                     console.log(agSelect);
@@ -211,9 +248,11 @@ $(document).ready(function () {
     })
     $('#esp-select').change(function () {
         procSelect = especialidades[$(this).val() - 1]
+        procID = $(this).val()
     })
     $('#exam-select').change(function () {
         procSelect = exams[$(this).val() - 1]
+        procID = $(this).val()
     })
 
     $('.card')
@@ -232,7 +271,7 @@ $(document).ready(function () {
     })
 
     $('#fin-ag').click(function () {
-        if($('#dia-select').val() >= 0 && $('#hora-select').val() >= 0){
+        if ($('#dia-select').val() >= 0 && $('#hora-select').val() >= 0) {
             window.location.href = './Agradecimento.html';
         } else {
             alert('Por favor, insira a data e hora do agendamento.');
@@ -255,26 +294,26 @@ $(document).ready(function () {
         const validNEstado = $('#estado').val() != ''
 
         if (!(
-                validName 
-                && validEmail 
-                && validPhone
-                && validDataNasc
-                && validSexo
-                && validCPF
-                && validSUS
-                && validCEP
-                && validNum
-                && validRua
-                && validBairro
-                && validCidade
-                && validNEstado
-            )) {
+            validName
+            && validEmail
+            && validPhone
+            && validDataNasc
+            && validSexo
+            && validCPF
+            && validSUS
+            && validCEP
+            && validNum
+            && validRua
+            && validBairro
+            && validCidade
+            && validNEstado
+        )) {
             alert('Por favor, insira os dados corretos.');
         }
 
         return (
-            validName 
-            && validEmail 
+            validName
+            && validEmail
             && validPhone
             && validDataNasc
             && validSexo
@@ -337,208 +376,25 @@ $(document).ready(function () {
     function filterAgendamento() {
         return agendas.filter(ag => ag.procedimento === procSelect)
     }
+
+
 });
 
 function getData() {
-    const namesAndSurnames = [
-        "Alice Smith",
-        "Bob Johnson",
-        "Charlie Brown",
-        "David Davis",
-        "Emma Wilson",
-        "Frank Anderson",
-        "Grace García",
-        "Henry Martínez",
-        "Isabel Rodriguez",
-        "Jack Jones",
-        "Katherine Miller",
-        "Liam Davis",
-        "Mia Williams",
-        "Noah Moore",
-        "Olivia Taylor",
-        "Penelope Jackson",
-        "Quinn Martin",
-        "Ryan Lee",
-        "Sophia Perez",
-        "Thomas Harris",
-        "Uma Clark",
-        "Victor Lewis",
-        "Willow Young",
-        "Xander Walker",
-        "Yasmine Hall",
-        "Zachary Allen",
-        "Abigail King",
-        "Benjamin Wright",
-        "Chloe Scott",
-        "Daniel Torres",
-        "Ella Nguyen",
-        "Fiona Hill",
-        "George Lopez",
-        "Hannah Adams",
-        "Isaac Green",
-        "Jasmine Baker",
-        "Kevin Nelson",
-        "Lily Carter",
-        "Mary Mitchell",
-        "Nathan Phillips",
-        "Oliver Davis",
-        "Olivia Williams",
-        "Piper Moore",
-        "Quinn Taylor",
-        "Riley Jackson",
-        "Samuel Martin",
-        "Sophia Lee",
-        "Thomas Perez",
-        "Uma Harris",
-        "Victor Clark",
-        "Willow Lewis",
-        "Xander Young",
-        "Yasmine Walker",
-        "Zachary Hall",
-        "Abigail Allen",
-        "Benjamin King",
-        "Chloe Wright",
-        "Daniel Scott",
-        "Ella Torres",
-        "Fiona Nguyen",
-        "George Hill",
-        "Hannah Lopez",
-        "Isaac Adams",
-        "Jasmine Green",
-        "Kevin Baker",
-        "Lily Nelson",
-        "Mason Carter",
-        "Nora Mitchell",
-        "Oscar Phillips",
-        "Phoebe Smith",
-        "Quincy Johnson",
-        "Rebecca Brown",
-        "Samuel Davis",
-        "Tara Williams",
-        "Uriel Moore",
-        "Violet Taylor",
-        "William Jackson",
-        "Xander Martin",
-        "Yara Lee",
-        "Zane Perez",
-        "Zoe Harris"
-    ];
+    const namesAndSurnames = ["Alice Smith", "Bob Johnson", "Charlie Brown", "David Davis", "Emma Wilson", "Frank Anderson", "Grace García", "Henry Martínez", "Isabel Rodriguez", "Jack Jones", "Katherine Miller", "Liam Davis", "Mia Williams", "Noah Moore", "Olivia Taylor", "Penelope Jackson", "Quinn Martin", "Ryan Lee", "Sophia Perez", "Thomas Harris", "Uma Clark", "Victor Lewis", "Willow Young", "Xander Walker", "Yasmine Hall", "Zachary Allen", "Abigail King", "Benjamin Wright", "Chloe Scott", "Daniel Torres", "Ella Nguyen", "Fiona Hill", "George Lopez", "Hannah Adams", "Isaac Green", "Jasmine Baker", "Kevin Nelson", "Lily Carter", "Mary Mitchell", "Nathan Phillips", "Oliver Davis", "Olivia Williams", "Piper Moore", "Quinn Taylor", "Riley Jackson", "Samuel Martin", "Sophia Lee", "Thomas Perez", "Uma Harris", "Victor Clark", "Willow Lewis", "Xander Young", "Yasmine Walker", "Zachary Hall", "Abigail Allen", "Benjamin King", "Chloe Wright", "Daniel Scott", "Ella Torres", "Fiona Nguyen", "George Hill", "Hannah Lopez", "Isaac Adams", "Jasmine Green", "Kevin Baker", "Lily Nelson", "Mason Carter", "Nora Mitchell", "Oscar Phillips", "Phoebe Smith", "Quincy Johnson", "Rebecca Brown", "Samuel Davis", "Tara Williams", "Uriel Moore", "Violet Taylor", "William Jackson", "Xander Martin", "Yara Lee", "Zane Perez", "Zoe Harris"];
 
     const times = ["06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"]
 
-    const dates = [
-        "20/10/2023",
-        "21/10/2023",
-        "22/10/2023",
-        "23/10/2023",
-        "24/10/2023",
-        "25/10/2023",
-        "26/10/2023",
-        "27/10/2023",
-        "28/10/2023",
-        "29/10/2023",
-        "30/10/2023",
-        "31/10/2023",
-        "01/11/2023",
-        "02/11/2023",
-        "03/11/2023",
-        "04/11/2023",
-        "05/11/2023",
-        "06/11/2023",
-        "07/11/2023",
-        "08/11/2023",
-        "09/11/2023",
-        "10/11/2023",
-        "11/11/2023",
-        "12/11/2023",
-        "13/11/2023",
-        "14/11/2023",
-        "15/11/2023",
-        "16/11/2023",
-        "17/11/2023",
-        "18/11/2023",
-        "19/11/2023",
-        "20/11/2023",
-        "21/11/2023",
-        "22/11/2023",
-        "23/11/2023",
-        "24/11/2023",
-        "25/11/2023",
-        "26/11/2023",
-        "27/11/2023",
-        "28/11/2023",
-        "29/11/2023",
-        "30/11/2023",
-        "01/12/2023",
-        "02/12/2023",
-        "03/12/2023",
-        "04/12/2023",
-        "05/12/2023",
-        "06/12/2023",
-        "07/12/2023",
-        "08/12/2023",
-        "09/12/2023",
-        "10/12/2023",
-        "11/12/2023",
-        "12/12/2023",
-        "13/12/2023",
-        "14/12/2023",
-        "15/12/2023",
-        "16/12/2023",
-        "17/12/2023",
-        "18/12/2023",
-        "19/12/2023",
-        "20/12/2023",
-        "21/12/2023",
-        "22/12/2023",
-        "23/12/2023",
-        "24/12/2023",
-        "25/12/2023",
-        "26/12/2023",
-        "27/12/2023",
-        "28/12/2023",
-        "29/12/2023",
-        "30/12/2023",
-        "31/12/2023"
-    ]
+    const dates = ["20/10/2023", "21/10/2023", "22/10/2023", "23/10/2023", "24/10/2023", "25/10/2023", "26/10/2023", "27/10/2023", "28/10/2023", "29/10/2023", "30/10/2023", "31/10/2023", "01/11/2023", "02/11/2023", "03/11/2023", "04/11/2023", "05/11/2023", "06/11/2023", "07/11/2023", "08/11/2023", "09/11/2023", "10/11/2023", "11/11/2023", "12/11/2023", "13/11/2023", "14/11/2023", "15/11/2023", "16/11/2023", "17/11/2023", "18/11/2023", "19/11/2023", "20/11/2023", "21/11/2023", "22/11/2023", "23/11/2023", "24/11/2023", "25/11/2023", "26/11/2023", "27/11/2023", "28/11/2023", "29/11/2023", "30/11/2023", "01/12/2023", "02/12/2023", "03/12/2023", "04/12/2023", "05/12/2023", "06/12/2023", "07/12/2023", "08/12/2023", "09/12/2023", "10/12/2023", "11/12/2023", "12/12/2023", "13/12/2023", "14/12/2023", "15/12/2023", "16/12/2023", "17/12/2023", "18/12/2023", "19/12/2023", "20/12/2023", "21/12/2023", "22/12/2023", "23/12/2023", "24/12/2023", "25/12/2023", "26/12/2023", "27/12/2023", "28/12/2023", "29/12/2023", "30/12/2023", "31/12/2023"]
 
-    const brazilianHospitals = [
-        "Hospital Albert Einstein",
-        "Hospital Sírio-Libanês",
-        "Hospital das Clínicas da USP",
-        "Hospital Samaritano",
-        "Hospital Copa D'Or",
-        "Hospital Moinhos de Vento",
-        "Hospital do Coração",
-        "Hospital Alemão Oswaldo Cruz",
-        "Hospital São Lucas",
-        "Hospital São Camilo",
-        "Hospital das Clínicas de Porto Alegre",
-        "Hospital Beneficência Portuguesa",
-        "Hospital de Clínicas de Curitiba",
-        "Hospital Santa Catarina",
-        "Hospital da Criança Santo Antônio",
-        "Hospital das Clínicas de Ribeirão Preto",
-        "Hospital Geral de Fortaleza",
-        "Hospital das Clínicas da UFMG",
-        "Hospital de Clínicas de Porto Alegre",
-        "Hospital Universitário Clementino Fraga Filho"
-    ];
+    const brazilianHospitals = ["Hospital Albert Einstein", "Hospital Sírio-Libanês", "Hospital das Clínicas da USP", "Hospital Samaritano", "Hospital Copa D'Or", "Hospital Moinhos de Vento", "Hospital do Coração", "Hospital Alemão Oswaldo Cruz", "Hospital São Lucas", "Hospital São Camilo", "Hospital das Clínicas de Porto Alegre", "Hospital Beneficência Portuguesa", "Hospital de Clínicas de Curitiba", "Hospital Santa Catarina", "Hospital da Criança Santo Antônio", "Hospital das Clínicas de Ribeirão Preto", "Hospital Geral de Fortaleza", "Hospital das Clínicas da UFMG", "Hospital de Clínicas de Porto Alegre", "Hospital Universitário Clementino Fraga Filho"];
 
+    const exams = ['Glicemia', 'Radiografia', 'Mamografia', 'Ultrassonografia']
 
-    const exams = [
-        'Glicemia',
-        'Radiografia',
-        'Mamografia',
-        'Ultrassonografia'
-    ]
+    const especialidades = ['Nutricionista', 'Ortopedista', 'Psicólogo', 'Cardiologista']
 
-    const especialidades = [
-        'Nutricionista',
-        'Ortopedista',
-        'Psicólogo',
-        'Cardiologista'
-    ]
+    const bairrosList = [ { bairro: "Boa Viagem", cidade: "Recife" }, { bairro: "Boa Vista", cidade: "Recife" }, { bairro: "Imbiribeira", cidade: "Recife" }, { bairro: "Setúbal", cidade: "Recife" }, { bairro: "Casa Amarela", cidade: "Recife" }, { bairro: "Jardim São Paulo", cidade: "Recife" }, { bairro: "Piedade", cidade: "Jaboatão dos Guararapes" }, { bairro: "Candeias", cidade: "Jaboatão dos Guararapes" }, { bairro: "Boa Esperança", cidade: "Olinda" }, { bairro: "Carmo", cidade: "Olinda" }, { bairro: "Aflitos", cidade: "Recife" }, { bairro: "Areias", cidade: "Recife" }, { bairro: "Pina", cidade: "Recife" }, { bairro: "Ibura", cidade: "Recife" }, { bairro: "Janga", cidade: "Paulista" }, { bairro: "Camaragibe", cidade: "Camaragibe" }, { bairro: "Monteiro", cidade: "Jaboatão dos Guararapes" }, { bairro: "Ilha do Retiro", cidade: "Recife" }, { bairro: "Casa Caiada", cidade: "Olinda" }, { bairro: "Espinheiro", cidade: "Recife" }    ];
+
 
 
     const agenda = {
@@ -571,13 +427,17 @@ function getData() {
     console.log(agendas[79]); */
 
     function createAgenda(tipo, procedimentos, i) {
+        const bc = Math.floor(Math.random() * bairrosList.length)
+
         const agenda = {
             tipo: tipo,
             hospital: brazilianHospitals[Math.floor(Math.random() * brazilianHospitals.length)],
             medico: i < 40 ? namesAndSurnames[i] : '',
             procedimento: procedimentos[Math.floor(Math.random() * procedimentos.length)],
             distancia: `${(Math.random() * 4).toFixed(3)} km`,
-            datas: createDatas()
+            datas: createDatas(),
+            bairro: bairrosList[bc].bairro,
+            cidade: bairrosList[bc].cidade
         }
         return agenda
     }
@@ -613,4 +473,26 @@ function getData() {
         agendas
     }
 
+}
+
+async function fetchProcedimentos() {
+    try {
+        const response = await fetch(`${_url}/rest/procs`);
+        const data = await response.json();
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchAgenda(proc) {
+    try {
+        const response = await fetch(`${_url}/rest/hospitalProc/${proc}`);
+        const data = await response.json();
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
