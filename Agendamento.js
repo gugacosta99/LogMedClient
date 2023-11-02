@@ -36,6 +36,7 @@ $(document).ready(function () {
     var procSelect = ''
     var procID = -1
     var filteredAgenda = []
+    var resAgenda = []
     var agSelect = {}
 
     // Initial step
@@ -98,6 +99,8 @@ $(document).ready(function () {
                 }) */
                 fetchAgenda(procID).then(data => {
                     if(data) {
+                        resAgenda = data;
+
                         $('#tbody-agenda').empty()
                         data.forEach((ag, i) => {
                             const hosp = `<th scope="row">${ag.nomeHospital}</th>`
@@ -113,9 +116,24 @@ $(document).ready(function () {
                     } else {
                         alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
                     }
+                    
+                    $('.ag-table-row').click(function () {
+                        agSelect = resAgenda[$(this).data('index')]
+                        console.log(agSelect);
+    
+                        fetchDias(agSelect).then(dias => {
+                            $('#dia-select').empty()
+                            $('#dia-select').append('<option selected>Selecione o Dia</option>')
+                            dias.forEach((d, i) => {
+                                $('#dia-select').append(`<option value="${i}">${d.Dia}</option>`)
+                            })
+                            $('hora-select').empty()
+                            $('hora-select').append('<option selected>Selecione o Horário</option>')
+                        })
+                    })
                 })
 
-                $('.ag-table-row').click(function () {
+                /* $('.ag-table-row').click(function () {
                     agSelect = filteredAgenda[$(this).data('index')]
                     console.log(agSelect);
 
@@ -126,7 +144,8 @@ $(document).ready(function () {
                     })
                     $('hora-select').empty()
                     $('hora-select').append('<option selected>Selecione o Horário</option>')
-                })
+                }) */
+
             }
         }
 
@@ -493,6 +512,20 @@ async function fetchProcedimentos() {
 async function fetchAgenda(proc) {
     try {
         const response = await fetch(`${_url}/rest/hospitalProc/${proc}`);
+        const data = await response.json();
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchDias(agenda) {
+    const endpoint = agenda.idMedico > 0 ? `/rest/data-medico/${agenda.idMedico}` : `/rest/data-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}`
+    console.log(endpoint);
+
+    try {
+        const response = await fetch(`${_url}${endpoint}`);
         const data = await response.json();
         console.log(data);
         return data
