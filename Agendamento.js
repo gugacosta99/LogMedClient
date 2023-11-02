@@ -1,10 +1,9 @@
 const _url = 'https://www.api.logmed.gustech-rec.com'
 
-
 $(document).ready(function () {
 
     fetchProcedimentos().then(procs => {
-        if(procs) {
+        if (procs) {
             $('#exam-select').empty()
             $('#exam-select').append(`<option selected>Selecione o Exame</option>`)
             procs.exames.forEach((ex, i) => {
@@ -24,9 +23,7 @@ $(document).ready(function () {
 
 
     var select = ''
-    var procSelect = ''
     var procID = -1
-    var filteredAgenda = []
     var resAgenda = []
     var resDias = []
     var agSelect = {}
@@ -77,48 +74,7 @@ $(document).ready(function () {
             console.log(validation);
 
             if (validation) {
-                fetchAgenda(procID).then(data => {
-                    if(data) {
-                        resAgenda = data;
-
-                        $('#tbody-agenda').empty()
-                        data.forEach((ag, i) => {
-                            const hosp = `<th scope="row">${ag.nomeHospital}</th>`
-                            const proc = ag.idMedico > 0 ? `<td>${ag.nomeMedico} (${ag.Procedimento})</td>` : `<td>${ag.Procedimento}</td>`
-                            const bair = `<td>${ag.Bairro}</td>`
-                            const cida = `<td>${ag.Cidade}</td>`
-                            
-                            const modalSet = 'data-bs-toggle="modal" data-bs-target="#exampleModal"'
-                            
-                            const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
-                            $('#tbody-agenda').append(row)
-                        })
-                    } else {
-                        alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
-                    }
-
-                    $('.ag-table-row').click(function () {
-                        agSelect = resAgenda[$(this).data('index')]
-                        console.log(agSelect);
-    
-                        fetchDias(agSelect).then(dias => {
-                            if (data) {
-                                resDias = dias
-    
-                                $('#dia-select').empty()
-                                $('#dia-select').append('<option selected>Selecione o Dia</option>')
-                                dias.forEach((d, i) => {
-                                    $('#dia-select').append(`<option value="${i}">${d.Dia}</option>`)
-                                })
-                                $('hora-select').empty()
-                                $('hora-select').append('<option selected>Selecione o Horário</option>')
-                            } else {
-                                alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
-                            }
-                        })
-                    })
-                })
-
+                setAgenda()
             }
         }
 
@@ -136,9 +92,6 @@ $(document).ready(function () {
             }
         }
     });
-
-    var filteredAgenda = []
-
 
     $('#phone').on('input', function () {
         let phoneNumber = $(this).val().replace(/\D/g, ''); // Remove non-numeric characters
@@ -256,19 +209,7 @@ $(document).ready(function () {
         })
 
     $('#dia-select').change(function () {
-        $('#hora-select').empty().append('<option selected>Selecione o Horário</option>')
-
-        if ($(this).val() >= 0) {
-            fetchHoras(agSelect, resDias[$(this).val()].Dia).then(hl => {
-                if (hl) {
-                    hl.forEach((h, i) => {
-                        $('#hora-select').append(`<option value="${i}">${h.hora}</option>`)
-                    })
-                } else {
-                    alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
-                }
-            })
-        }
+        setHoras($(this))
     })
 
     $('#fin-ag').click(function () {
@@ -374,7 +315,71 @@ $(document).ready(function () {
         return retval
     }
 
+    function setAgenda() {
+        fetchAgenda(procID).then(data => {
+            if (data) {
+                resAgenda = data;
 
+                $('#tbody-agenda').empty()
+                data.forEach((ag, i) => {
+                    const hosp = `<th scope="row">${ag.nomeHospital}</th>`
+                    const proc = ag.idMedico > 0 ? `<td>${ag.nomeMedico} (${ag.Procedimento})</td>` : `<td>${ag.Procedimento}</td>`
+                    const bair = `<td>${ag.Bairro}</td>`
+                    const cida = `<td>${ag.Cidade}</td>`
+
+                    const modalSet = 'data-bs-toggle="modal" data-bs-target="#exampleModal"'
+
+                    const row = `<tr data-index="${i}" class="ag-table-row" ${modalSet}>${hosp} ${proc} ${bair} ${cida}</tr>`
+                    $('#tbody-agenda').append(row)
+                })
+            } else {
+                alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
+            }
+
+            setDias()
+        })
+    }
+    
+    function setDias() {
+        $('.ag-table-row').click(function () {
+            console.log('setDias: ');
+            console.log(resAgenda);
+            agSelect = resAgenda[$(this).data('index')]
+            console.log(agSelect);
+    
+            fetchDias(agSelect).then(dias => {
+                if (dias) {
+                    resDias = dias
+    
+                    $('#dia-select').empty()
+                    $('#dia-select').append('<option selected>Selecione o Dia</option>')
+                    dias.forEach((d, i) => {
+                        $('#dia-select').append(`<option value="${i}">${d.Dia}</option>`)
+                    })
+                    $('hora-select').empty()
+                    $('hora-select').append('<option selected>Selecione o Horário</option>')
+                } else {
+                    alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
+                }
+            })
+        })
+    }
+
+    function setHoras(d) {
+        $('#hora-select').empty().append('<option selected>Selecione o Horário</option>')
+
+        if (d.val() >= 0) {
+            fetchHoras(agSelect, resDias[d.val()].Dia).then(hl => {
+                if (hl) {
+                    hl.forEach((h, i) => {
+                        $('#hora-select').append(`<option value="${i}">${h.hora}</option>`)
+                    })
+                } else {
+                    alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
+                }
+            })
+        }
+    }
 });
 
 async function fetchProcedimentos() {
@@ -400,9 +405,10 @@ async function fetchAgenda(proc) {
 }
 
 async function fetchDias(agenda) {
-    const endpoint = 
-        agenda.idMedico > 0 ? 
-            `/rest/data-medico/${agenda.idMedico}` : 
+    console.log(agenda);
+    const endpoint =
+        agenda.idMedico > 0 ?
+            `/rest/data-medico/${agenda.idMedico}` :
             `/rest/data-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}`
     console.log(endpoint);
 
@@ -417,9 +423,9 @@ async function fetchDias(agenda) {
 }
 
 async function fetchHoras(agenda, dia) {
-    const endpoint = 
-        agenda.idMedico > 0 ? 
-            `/rest/hora-medico/${agenda.idMedico}/${encodeURIComponent(dia)}` : 
+    const endpoint =
+        agenda.idMedico > 0 ?
+            `/rest/hora-medico/${agenda.idMedico}/${encodeURIComponent(dia)}` :
             `/rest/hora-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}/${encodeURIComponent(dia)}`
     console.log(endpoint);
 
