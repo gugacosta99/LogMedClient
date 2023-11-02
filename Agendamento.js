@@ -37,6 +37,7 @@ $(document).ready(function () {
     var procID = -1
     var filteredAgenda = []
     var resAgenda = []
+    var resDias = []
     var agSelect = {}
 
     // Initial step
@@ -116,19 +117,25 @@ $(document).ready(function () {
                     } else {
                         alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
                     }
-                    
+
                     $('.ag-table-row').click(function () {
                         agSelect = resAgenda[$(this).data('index')]
                         console.log(agSelect);
     
                         fetchDias(agSelect).then(dias => {
-                            $('#dia-select').empty()
-                            $('#dia-select').append('<option selected>Selecione o Dia</option>')
-                            dias.forEach((d, i) => {
-                                $('#dia-select').append(`<option value="${i}">${d.Dia}</option>`)
-                            })
-                            $('hora-select').empty()
-                            $('hora-select').append('<option selected>Selecione o Horário</option>')
+                            if (data) {
+                                resDias = dias
+    
+                                $('#dia-select').empty()
+                                $('#dia-select').append('<option selected>Selecione o Dia</option>')
+                                dias.forEach((d, i) => {
+                                    $('#dia-select').append(`<option value="${i}">${d.Dia}</option>`)
+                                })
+                                $('hora-select').empty()
+                                $('hora-select').append('<option selected>Selecione o Horário</option>')
+                            } else {
+                                alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
+                            }
                         })
                     })
                 })
@@ -286,11 +293,23 @@ $(document).ready(function () {
 
     $('#dia-select').change(function () {
         $('#hora-select').empty().append('<option selected>Selecione o Horário</option>')
+
         if ($(this).val() >= 0) {
+            fetchHoras(agSelect, resDias[$(this).val()].Dia).then(hl => {
+                if (hl) {
+                    hl.forEach((h, i) => {
+                        $('#hora-select').append(`<option value="${i}">${h.hora}</option>`)
+                    })
+                } else {
+                    alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
+                }
+            })
+        }
+        /* if ($(this).val() >= 0) {
             agSelect.datas[$(this).val()].horarios.forEach((h, i) => {
                 $('#hora-select').append(`<option value="${i}">${h}</option>`)
             })
-        }
+        } */
     })
 
     $('#fin-ag').click(function () {
@@ -521,7 +540,27 @@ async function fetchAgenda(proc) {
 }
 
 async function fetchDias(agenda) {
-    const endpoint = agenda.idMedico > 0 ? `/rest/data-medico/${agenda.idMedico}` : `/rest/data-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}`
+    const endpoint = 
+        agenda.idMedico > 0 ? 
+            `/rest/data-medico/${agenda.idMedico}` : 
+            `/rest/data-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}`
+    console.log(endpoint);
+
+    try {
+        const response = await fetch(`${_url}${endpoint}`);
+        const data = await response.json();
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function fetchHoras(agenda, dia) {
+    const endpoint = 
+        agenda.idMedico > 0 ? 
+            `/rest/hora-medico/${agenda.idMedico}/${encodeURIComponent(dia)}` : 
+            `/rest/hora-exame/${agenda.idProcedimento}/${encodeURIComponent(agenda.HospitalCNPJ)}/${encodeURIComponent(dia)}`
     console.log(endpoint);
 
     try {
