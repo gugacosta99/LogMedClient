@@ -26,6 +26,7 @@ $(document).ready(function () {
     var procID = -1
     var resAgenda = []
     var resDias = []
+    var resHoras = []
     var agSelect = {}
 
     // Initial step
@@ -214,7 +215,7 @@ $(document).ready(function () {
 
     $('#fin-ag').click(function () {
         if ($('#dia-select').val() >= 0 && $('#hora-select').val() >= 0) {
-            window.location.href = './Agradecimento.html';
+            sendConsulta();
         } else {
             alert('Por favor, insira a data e hora do agendamento.');
         }
@@ -339,18 +340,18 @@ $(document).ready(function () {
             setDias()
         })
     }
-    
+
     function setDias() {
         $('.ag-table-row').click(function () {
             console.log('setDias: ');
             console.log(resAgenda);
             agSelect = resAgenda[$(this).data('index')]
             console.log(agSelect);
-    
+
             fetchDias(agSelect).then(dias => {
                 if (dias) {
                     resDias = dias
-    
+
                     $('#dia-select').empty()
                     $('#dia-select').append('<option selected>Selecione o Dia</option>')
                     dias.forEach((d, i) => {
@@ -371,6 +372,8 @@ $(document).ready(function () {
         if (d.val() >= 0) {
             fetchHoras(agSelect, resDias[d.val()].Dia).then(hl => {
                 if (hl) {
+                    resHoras = hl;
+
                     hl.forEach((h, i) => {
                         $('#hora-select').append(`<option value="${i}">${h.hora}</option>`)
                     })
@@ -378,6 +381,63 @@ $(document).ready(function () {
                     alert('Ocorreu um erro de comunicação com o servidor, por favor recarregue a página.');
                 }
             })
+        }
+    }
+
+    function sendConsulta() {
+        const consulta = {
+            datahora: `${resDias[$('#dia-select').val()].Dia} ${resHoras[$('#hora-select').val()].hora}`,
+            idMedico: agSelect.idMedico ? agSelect.idMedico : -1,
+            hospitalCNPJ: agSelect.HospitalCNPJ ? agSelect.HospitalCNPJ : '',
+            idExame: agSelect.idProcedimento ? agSelect.idProcedimento : -1,
+
+            paciente: {
+                cpf: $('#cpf').val(),
+                data: formatDate($('#datanasc').val()),
+                email: $('#email').val(),
+                nome: $('#username').val(),
+                sus: $('#sus').val(),
+                sexo: $('#sexo').val(),
+                telefone: $('#phone').val(),
+
+                endereco: {
+                    cidade: $('#cidade').val(),
+                    bairro: $('#bairro').val(),
+                    rua: $('#rua').val(),
+                    estado: $('#estado').val(),
+                    cep: $('#cep').val(),
+                    complemento: $('#num').val(),
+                    lat: 1,
+                    long: 1
+                }
+            }
+        }
+
+        console.log(consulta);
+        fetchConsultaPOST(consulta)
+            .then(success => {
+                if(success) {
+                    //window.location.href = './Agradecimento.html';
+                }
+            })
+    }
+
+    function formatDate(inputDate) {
+        // Split the input date string into an array using the '-' delimiter
+        const parts = inputDate.split('-');
+
+        // Check if the input date has three parts (year, month, day)
+        if (parts.length === 3) {
+            // Reorder the parts to "day, month, year"
+            const [year, month, day] = parts;
+
+            // Construct the output date string in "dd/mm/yyyy" format
+            const outputDate = `${day}/${month}/${year}`;
+
+            return outputDate;
+        } else {
+            // Return an error message for invalid input
+            return 'Invalid date format';
         }
     }
 });
@@ -436,5 +496,31 @@ async function fetchHoras(agenda, dia) {
         return data
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+async function fetchConsultaPOST(consulta) {
+    // Configuração para enviar dados em um POST
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Define o tipo de conteúdo como JSON
+        },
+        body: JSON.stringify(consulta), // Dados a serem enviados
+    };
+
+    // Fazendo uma requisição POST para o servidor
+    try {
+        const response = await fetch(`${_url}/rest/consulta`, requestOptions)
+        console.log(response);
+
+        if (response.ok) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        return false;
     }
 }
