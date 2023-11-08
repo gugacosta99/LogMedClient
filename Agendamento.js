@@ -417,7 +417,7 @@ $(document).ready(function () {
         fetchConsultaPOST(consulta)
             .then(success => {
                 if(success) {
-                    //window.location.href = './Agradecimento.html';
+                    window.location.href = './Agradecimento.html';
                 }
             })
     }
